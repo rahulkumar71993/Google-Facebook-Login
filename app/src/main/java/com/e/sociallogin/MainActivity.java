@@ -35,65 +35,57 @@ import java.util.Arrays;
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "FacebookLogin";
-
     private CallbackManager callbackManager;
     LoginButton loginButton;
     private static final String EMAIL = "email";
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
         callbackManager = CallbackManager.Factory.create();
-
-
         loginButton = (LoginButton) findViewById(R.id.login_button);
         loginButton.setReadPermissions(Arrays.asList(EMAIL));
         // If you are using in a fragment, call loginButton.setFragment(this);
-
         // Callback registration
         loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
                 // App code
                 profileDetail(loginResult);
-
             }
 
             @Override
             public void onCancel() {
                 // App code
             }
-
             @Override
             public void onError(FacebookException exception) {
                 // App code
             }
         });
     }
-
     private void profileDetail(LoginResult loginResult) {
         GraphRequest request=GraphRequest.newMeRequest(loginResult.getAccessToken(), new GraphRequest.GraphJSONObjectCallback() {
             @Override
             public void onCompleted(JSONObject object, GraphResponse response) {
                 try {
-                    Log.e(TAG,object.getString("email")+object.getString("gender")+object.getString("name")+object.getString("id"));
-
+                    Log.e(TAG,object.getString("email"));
+                    Log.e(TAG,object.getString("gender"));
+                    Log.e(TAG,object.getString("name"));
+                    Log.e(TAG,object.getString("id"));
+                    Log.e(TAG,object.getString("email"));
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
             }
         });
-
         Bundle parameters = new Bundle();
         parameters.putString("fields", "id,name,email,gender, birthday");
         request.setParameters(parameters);
         request.executeAsync();
     }
-
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
